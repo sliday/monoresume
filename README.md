@@ -2,6 +2,8 @@
 
 Simple resume template built with monospace fonts. Pretty. Geeky.
 
+![CleanShot 2024-10-26 at 00 18 14@2x](https://github.com/user-attachments/assets/044195b8-e8fa-4a03-93e7-e7c77330ac86)
+
 Monospace fonts are dear to many of us. Some find them more readable, consistent, and beautiful, than their proportional alternatives. Maybe we're just brainwashed from spending years in terminals? Or are we hopelessly nostalgic? I'm not sure. But I like them, and that's why I started experimenting with all-monospace Web.
 
 Monospace fonts:
