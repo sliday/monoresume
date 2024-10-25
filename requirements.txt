@@ -1,0 +1,11 @@
+colorama
+fitz
+httpx
+Jinja2
+markdown
+Pillow
+PyPDF2
+PyYAML
+requests
+tenacity
+pymdown-extensions

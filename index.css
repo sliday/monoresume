@@ -1,13 +1,17 @@
 @import url('https://fonts.cdnfonts.com/css/jetbrains-mono-2');
 
 :root {
-  --font-family: "JetBrains Mono", monospace;
+  --font-family: "Monaspace Krypton", "JetBrains Mono", monospace;
   --line-height: 1.20rem;
   --border-thickness: 2px;
-  --text-color: #000;
-  --text-color-alt: #666;
-  --background-color: #fff;
-  --background-color-alt: #eee;
+  --text-color: var(--text-color);
+  --text-color-alt: var(--text-color-alt);
+  --background-color: var(--background-color);
+  --background-color-alt: var(--background-color-alt);
+  --border-color: var(--text-color);
+  --link-color: var(--text-color);
+  --button-hover-color: var(--background-color-alt);
+  --placeholder-color: var(--text-color-alt);
 
   --font-weight-normal: 500;
   --font-weight-medium: 600;
@@ -19,21 +23,12 @@
   font-style: normal;
   font-variant-numeric: tabular-nums lining-nums;
   font-size: 16px;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-color: #fff;
-    --text-color-alt: #aaa;
-    --background-color: #000;
-    --background-color-alt: #111;
-  }
 }
 
 * {
   box-sizing: border-box;
 }
-
 
 * + * {
   margin-top: var(--line-height);
@@ -101,7 +96,7 @@ hr:after {
   top: calc(var(--line-height) / 2 - var(--border-thickness));
   left: 0;
   width: 100%;
-  border-top: calc(var(--border-thickness) * 3) double var(--text-color);
+    border-top: calc(var(--border-thickness) * 3) double var(--border-color);
   height: 0;
 }
 
@@ -110,7 +105,7 @@ a {
 }
 
 a:link, a:visited {
-  color: var(--text-color);
+  color: var(--link-color);
 }
 
 p {
@@ -196,7 +191,7 @@ img {
 }
 
 details {
-  border: var(--border-thickness) solid var(--text-color);
+  border: var(--border-thickness) solid var(--border-color);
   padding: calc(var(--line-height) - var(--border-thickness)) 1ch;
   margin-bottom: var(--line-height);
 }
@@ -293,8 +288,8 @@ li::marker {
 }
 
 input, button, textarea {
-  border: var(--border-thickness) solid var(--text-color);
-  padding: 
+  border: var(--border-thickness) solid var(--border-color);
+  padding:
     calc(var(--line-height) / 2 - var(--border-thickness))
     calc(1ch - var(--border-thickness));
   margin: 0;
@@ -309,6 +304,7 @@ input, button, textarea {
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
   -webkit-appearance: none;
+  -appearance: none;
 }
 
 input[type=checkbox] {
@@ -335,11 +331,11 @@ input {
   width: calc(round(down, 100%, 1ch));
 }
 ::placeholder {
-  color: var(--text-color-alt);
+  color: var(--placeholder-color);
   opacity: 1;
 }
 ::-ms-input-placeholder {
-  color: var(--text-color-alt);
+  color: var(--placeholder-color);
 }
 button::-moz-focus-inner {
   padding: 0;
@@ -385,7 +381,7 @@ label input {
   position: relative;
   padding-left: 1.5ch;
   margin-left: 1.5ch;
-  border-left: var(--border-thickness) solid var(--text-color);
+  border-left: var(--border-thickness) solid var(--border-color);
 }
 .tree ul li:before {
   position: absolute;
@@ -394,7 +390,7 @@ label input {
   left: 0;
   content: "";
   width: 1ch;
-  border-bottom: var(--border-thickness) solid var(--text-color);
+  border-bottom: var(--border-thickness) solid var(--border-color);
 }
 .tree ul li:last-child {
   border-left: none;
@@ -406,7 +402,7 @@ label input {
   left: 0;
   content: "";
   height: calc(var(--line-height) / 2);
-  border-left: var(--border-thickness) solid var(--text-color);
+  border-left: var(--border-thickness) solid var(--border-color);
 }
 
 .grid {
@@ -449,9 +445,27 @@ label input {
 }
 
 .debug .off-grid {
-  background: rgba(255, 0, 0, 0.1);
+  background: rgba(255, 0, 0, 0.2);
 }
 
 .debug-toggle-label {
   text-align: right;
 }
+
+#theme-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: var(--background-color-alt);
+  color: var(--text-color);
+  border: var(--border-thickness) solid var(--border-color);
+  cursor: pointer;
+}
+
+#theme-toggle:hover {
+  background-color: var(--button-hover-color);
+}
+
+
+

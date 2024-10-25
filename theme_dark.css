@@ -1,0 +1,17 @@
+:root {
+  --text-color: #e0e0e0;
+  --text-color-alt: #b0b0b0;
+  --background-color: #1a1a1a;
+  --background-color-alt: #2a2a2a;
+  --border-color: #4a4a4a;
+  --link-color: #a0c0ff;
+  --button-hover-color: #3a3a3a;
+  --placeholder-color: #808080;
+  --selection-background: #4a4a4a;
+  --selection-color: #ffffff;
+}
+
+::selection {
+    background: var(--selection-background);
+    color: var(--selection-color);
+}
