@@ -10,12 +10,14 @@ Monospace fonts:
 - https://owickstrom.github.io/the-monospace-web
 - https://monaspace.githubnext.com
 - https://github.com/gabrielelana/awesome-terminal-fonts
-
+- https://en.wikipedia.org/wiki/List_of_monospaced_typefaces
 ## Build
 
 ```
 python generate.py [--pdf path/to/resume.pdf]
 ```
+
+Will output a single `index.html` in the current directory.
 
 ## How it works
 

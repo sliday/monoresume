@@ -24,35 +24,38 @@
     
     <meta name="color-scheme" content="light dark">
     <link rel="stylesheet" href="index.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(() => {
+        (() => {
             const setTheme = theme => {
-                $('html').attr('data-theme', theme);
+                document.documentElement.dataset.theme = theme;
                 localStorage.setItem('theme', theme);
-                $('link[rel="stylesheet"][href^="{{ theme_files[0] }}"], link[rel="stylesheet"][href^="{{ theme_files[1] }}"]')
-                    .attr('href', theme === 'light' ? '{{ theme_files[0] }}' : '{{ theme_files[1] }}');
+                document.querySelector(`link[href^="{{ theme_files[0] }}"], link[href^="{{ theme_files[1] }}"]`)
+                    .href = theme === 'light' ? '{{ theme_files[0] }}' : '{{ theme_files[1] }}';
             };
 
             const toggleTheme = () => setTheme(localStorage.getItem('theme') === 'light' ? 'dark' : 'light');
-            const prefersDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const prefersDark = () => matchMedia('(prefers-color-scheme: dark)').matches;
 
-            const initialTheme = localStorage.getItem('theme') || (prefersDark() ? 'dark' : 'light');
-            setTheme(initialTheme);
+            setTheme(localStorage.getItem('theme') || (prefersDark() ? 'dark' : 'light'));
 
-            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
-                if (!localStorage.getItem('theme')) {
-                    setTheme(e.matches ? 'dark' : 'light');
-                }
+            matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                !localStorage.getItem('theme') && setTheme(e.matches ? 'dark' : 'light');
             });
 
-            // Expose toggleTheme function globally if needed
             window.toggleTheme = toggleTheme;
-        });
+        })();
     </script>
 
     <link rel="stylesheet" href="{{ theme_files[0] }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family={{ google_font }}&display=swap');
+
+        * {
+            font-family: "{{ google_font }}",
+            monospace;
+        }
+    </style>
 </head>
 <body>
     <main>
@@ -65,7 +68,7 @@
     </main>
     <hr />
     <footer>
-        <p>&copy; {{ author }}, last updated {{ format_datetime(now, '%Y-%m-%d') }}</p>
+        <p>Last updated {{ format_datetime(now, '%Y-%m-%d') }}</p>
     </footer>
 </body>
 </html>

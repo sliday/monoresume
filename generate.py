@@ -19,10 +19,15 @@ import httpx
 from tenacity import retry, stop_after_attempt, wait_exponential
 from markdown.extensions import Extension
 from markdown.inlinepatterns import InlineProcessor
-from pymdownx import emoji
+import emoji
+import shutil
+import colorama
+import random
+from spinners import Spinners
+from halo import Halo
 
 # Initialize colorama
-init()
+colorama.init()
 
 def read_and_encode_file(file_path):
     parsed_url = urlparse(file_path)
@@ -73,23 +78,25 @@ def generate_favicon_base64(name, theme_name):
 def choose_theme():
     while True:
         print(f"\n{Fore.CYAN}Choose an option:{Style.RESET_ALL}")
-        print(f"1. {Fore.WHITE}🖥️  Default theme{Style.RESET_ALL}")
-        print(f"2. {Fore.YELLOW}☀️  Solarized theme{Style.RESET_ALL}")
-        print(f"3. {Fore.GREEN}💻  Terminal theme{Style.RESET_ALL}")
-        print(f"4. {Fore.MAGENTA}🎨  Surprise me!{Style.RESET_ALL}")
-        choice = input(f"{Fore.MAGENTA}Enter 1, 2, 3, or 4: {Style.RESET_ALL}")
+        print(f"1. {Fore.MAGENTA}🎨  Surprise me! (Default){Style.RESET_ALL}")
+        print(f"2. {Fore.WHITE}🖥️  Black & white{Style.RESET_ALL}")
+        print(f"3. {Fore.YELLOW}☀️  Solarized{Style.RESET_ALL}")
+        print(f"4. {Fore.GREEN}💻  Terminal{Style.RESET_ALL}")
+        choice = input(f"{Fore.MAGENTA}Enter 1, 2, 3, or 4 (default is 1): {Style.RESET_ALL}")
+        if choice == '':
+            choice = '1'  # Set default to 'Surprise me!'
         if choice in ['1', '2', '3', '4']:
             theme_name = {
-                '1': 'default',
-                '2': 'solarized',
-                '3': 'terminal',
-                '4': 'surprise'
+                '1': 'surprise',
+                '2': 'default',
+                '3': 'solarized',
+                '4': 'terminal'
             }[choice]
             theme_files = {
+                'surprise': ['theme_surprise_light.css', 'theme_surprise_dark.css'],
                 'default': ['theme_light.css', 'theme_dark.css'],
                 'solarized': ['theme_solarized_light.css', 'theme_solarized_dark.css'],
-                'terminal': ['theme_terminal_light.css', 'theme_terminal_dark.css'],
-                'surprise': ['theme_surprise_light.css', 'theme_surprise_dark.css']
+                'terminal': ['theme_terminal_light.css', 'theme_terminal_dark.css']
             }[theme_name]
             if theme_name == 'surprise':
                 generate_surprise_themes()
@@ -595,6 +602,18 @@ def enhanced_markdown_render(content):
     html_content = md(content, extensions=['extra', 'pymdownx.emoji'])
     return html_content
 
+def select_random_google_font():
+    print(f"{Fore.CYAN}📚 Reading Google Fonts list...{Style.RESET_ALL}")
+    with open('google-fonts.txt', 'r') as f:
+        fonts = f.read().splitlines()
+    print(f"{Fore.GREEN}✅ Font list read successfully{Style.RESET_ALL}")
+    
+    random_font = random.choice(fonts)
+    random_font = random_font.replace('+', ' ')  # Replace '+' with spaces
+    print(f"{Fore.YELLOW}🎲 Randomly selected font: {random_font}{Style.RESET_ALL}")
+    
+    return random_font
+
 def main():
     parser = argparse.ArgumentParser(description="Generate a website and optionally process a PDF resume.")
     parser.add_argument("--pdf", help="Path to the PDF resume file")
@@ -607,36 +626,85 @@ def main():
     author = "John Doe"  # Default author name
 
     if args.pdf:
-        pdf_content = read_pdf(args.pdf)
-        unified_resume = unify_format(pdf_content)
+        with Halo(text='Reading PDF...', spinner=Spinners.dots.value) as spinner:
+            pdf_content = read_pdf(args.pdf)
+            time.sleep(1)  # Simulate longer process
+            spinner.succeed('PDF read successfully')
+
+        with Halo(text='Unifying format...', spinner=Spinners.dots.value) as spinner:
+            unified_resume = unify_format(pdf_content)
+            time.sleep(1)  # Simulate longer process
+            spinner.succeed('Format unified')
+        
+        # Extract name from the unified resume
+        name_match = re.search(r'^# (.+)$', unified_resume, re.MULTILINE)
+        if name_match:
+            parsed_name = name_match.group(1).strip()
+        else:
+            parsed_name = "Unknown"
+
+        # Check if resume.md exists and contains a different name
+        if os.path.exists("resume.md"):
+            with open("resume.md", "r") as f:
+                existing_content = f.read()
+                existing_name_match = re.search(r'^# (.+)$', existing_content, re.MULTILINE)
+                if existing_name_match:
+                    existing_name = existing_name_match.group(1).strip()
+                    if existing_name != parsed_name:
+                        print(f"{Fore.YELLOW}⚠️  Warning: The existing resume.md contains a different name.{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}Existing name: {existing_name}{Style.RESET_ALL}")
+                        print(f"{Fore.YELLOW}Parsed name: {parsed_name}{Style.RESET_ALL}")
+                        overwrite = input(f"{Fore.MAGENTA}Do you want to overwrite the existing resume.md? (y/n): {Style.RESET_ALL}").lower()
+                        if overwrite != 'y':
+                            print(f"{Fore.RED}❌ Keeping the existing resume.md. Exiting.{Style.RESET_ALL}")
+                            return
+
+        # Write the new resume content
         with open("resume.md", "w") as f:
             f.write(unified_resume)
-        print("Resume has been processed and saved as resume.md")
+        print(f"{Fore.GREEN}✅ Resume has been processed and saved as resume.md{Style.RESET_ALL}")
 
-        photo_path = extract_image_from_pdf(args.pdf)
-        if photo_path:
-            print(f"Photo extracted and saved as {photo_path}")
+        with Halo(text='Extracting photo from PDF...', spinner=Spinners.dots.value) as spinner:
+            photo_path = extract_image_from_pdf(args.pdf)
+            time.sleep(1)  # Simulate longer process
+            if photo_path:
+                spinner.succeed(f'Photo extracted and saved as {photo_path}')
+            else:
+                spinner.warn('No photo found in the PDF')
 
-        with open("components.md", "r") as f:
-            components_content = f.read()
+        # Prompt user for AI-enhanced resume design
+        enhance_design = input(f"{Fore.MAGENTA}🤖 Would you like AI to improve the resume layout? (y/n): {Style.RESET_ALL}").lower()
+        
+        if enhance_design == 'y':
+            with Halo(text='Reading components...', spinner=Spinners.dots.value) as spinner:
+                with open("components.md", "r") as f:
+                    components_content = f.read()
+                time.sleep(1)  # Simulate longer process
+                spinner.succeed('Components read successfully')
 
-        print("Enhancing resume...")
-        try:
-            enhanced_resume = enhance_resume_with_retry(unified_resume, components_content, photo_path)
-            print("Resume enhancement completed successfully.")
-        except Exception as e:
-            print(f"Failed to enhance resume after multiple attempts. Error: {e}")
-            print("Proceeding with the original resume content.")
-            enhanced_resume = unified_resume
+            with Halo(text='Enhancing resume...', spinner=Spinners.dots.value) as spinner:
+                try:
+                    enhanced_resume = enhance_resume_with_retry(unified_resume, components_content, photo_path)
+                    spinner.succeed('Resume enhancement completed successfully')
+                except Exception as e:
+                    spinner.fail(f'Failed to enhance resume after multiple attempts. Error: {e}')
+                    print(f"{Fore.YELLOW}⚠️  Proceeding with the original resume content{Style.RESET_ALL}")
+                    enhanced_resume = unified_resume
 
-        with open("resume-enhanced.md", "w") as f:
-            f.write(enhanced_resume)
-        print("Enhanced resume has been saved as resume-enhanced.md")
-    
+            with open("resume-enhanced.md", "w") as f:
+                f.write(enhanced_resume)
+            print(f"{Fore.GREEN}✅ Enhanced resume has been saved as resume-enhanced.md{Style.RESET_ALL}")
+        else:
+            print(f"{Fore.CYAN}📋 Skipping AI enhancement. Copying resume.md to resume-enhanced.md{Style.RESET_ALL}")
+            shutil.copy("resume.md", "resume-enhanced.md")
+            print(f"{Fore.GREEN}✅ resume.md copied to resume-enhanced.md{Style.RESET_ALL}")
+
     # Read resume-enhanced.md
     if os.path.exists('resume-enhanced.md'):
+        print(f"{Fore.CYAN}📖 Reading resume-enhanced.md...{Style.RESET_ALL}")
         with open('resume-enhanced.md', 'r') as resume_file:
             resume_content = resume_file.read()
+        print(f"{Fore.GREEN}✅ resume-enhanced.md read successfully{Style.RESET_ALL}")
 
     # Split front matter and markdown content
     parts = resume_content.split('---', 2)
@@ -653,6 +721,7 @@ def main():
         markdown_content = resume_content
 
     author = metadata.get('author', "John Doe")  # Default author name
+    current_date = datetime.now().strftime("%Y-%m-%d")
 
     # Process photo after metadata extraction
     photo_html = ''
@@ -672,6 +741,7 @@ def main():
             metadata[key] = format_date(value)
 
     chosen_theme, theme_files = choose_theme()
+    theme_files.append('index.css')  # Add this line
 
     if chosen_theme == 'process_resume':
         print("Resume processing completed. Exiting.")
@@ -684,13 +754,8 @@ def main():
     with open('template.html', 'r') as file:
         template_string = file.read()
 
-    # Embed CSS files
-    for css_file in theme_files:
-        css_content = read_and_encode_file(css_file)
-        template_string = template_string.replace(
-            f'<link rel="stylesheet" href="{css_file}">',
-            f'<style>{css_content}</style>'
-        )
+    # Remove the CSS embedding code entirely
+    # The template.html file should already have the correct links to CSS files
 
     # Embed JavaScript files
     js_files = re.findall(r'<script src="(.+?)"></script>', template_string)
@@ -703,8 +768,6 @@ def main():
             )
         except requests.RequestException as e:
             print(f"Warning: Failed to fetch {js_file}. Error: {e}")
-            # Optionally, you can choose to keep the original script tag
-            # by not replacing it in the template_string
 
     # Embed images
     img_tags = re.findall(r'<img src="(.+?)"', template_string)
@@ -726,6 +789,8 @@ def main():
     # Get current date and time
     now = datetime.now()
 
+    google_font = select_random_google_font()
+
     try:
         rendered_html = template.render(
             metadata=metadata,
@@ -737,7 +802,9 @@ def main():
             photo=photo_html,
             format_date=format_date,
             now=now,
-            format_datetime=format_datetime  # Add the formatting function
+            format_datetime=format_datetime,
+            google_font=google_font,
+            current_date=current_date  # Add this line
         )
         print("HTML rendering completed successfully.")
     except Exception as e:
@@ -749,6 +816,8 @@ def main():
         file.write(rendered_html)
 
     print(f"Debug: index.html has been generated with embedded resources")
+
+    print(f"{Fore.GREEN}🎉 Process completed! index.html has been generated with embedded resources{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()
