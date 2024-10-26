@@ -2,22 +2,22 @@
 
 Simple resume template built with monospace fonts. Pretty. Geeky.
 
-![CleanShot 2024-10-26 at 00 18 14@2x](https://github.com/user-attachments/assets/044195b8-e8fa-4a03-93e7-e7c77330ac86)
-
 Monospace fonts are dear to many of us. Some find them more readable, consistent, and beautiful, than their proportional alternatives. Maybe we're just brainwashed from spending years in terminals? Or are we hopelessly nostalgic? I'm not sure. But I like them, and that's why I started experimenting with all-monospace Web.
 
-Monospace fonts:
-- https://owickstrom.github.io/the-monospace-web
-- https://monaspace.githubnext.com
-- https://github.com/gabrielelana/awesome-terminal-fonts
-- https://en.wikipedia.org/wiki/List_of_monospaced_typefaces
+![CleanShot 2024-10-26 at 09 42 01@2x](https://github.com/user-attachments/assets/ef176c87-89f5-4479-8c40-b3e6d0dd0b8e)
+
+| Mobile | Desktop |
+|------------|-----------|
+| ![CleanShot 2024-10-26 at 00 18 14@2x](https://github.com/user-attachments/assets/044195b8-e8fa-4a03-93e7-e7c77330ac86) | ![CleanShot 2024-10-26 at 09 43 32@2x](https://github.com/user-attachments/assets/0d6aeff8-a429-4c72-8101-5a6acc48e625) |
+
+
 ## Build
 
 ```
-python generate.py [--pdf path/to/resume.pdf]
+python generate.py --pdf path/to/resume.pdf
 ```
 
-Will output a single `index.html` in the current directory.
+Will convert PDF resume into a cool website. It will output a single `index.html` in the current directory.
 
 ## How it works
 
@@ -45,13 +45,10 @@ The `generate.py` script creates a customized static website:
 - Randomly selects a Google Font for the resume
 - Provides AI-enhanced resume layout option
 
-Run the script with:
+The script creates the website file based on your chosen theme and the content in `resume-enhanced.md` (or the processed PDF if provided).
 
-```bash
-python generate.py [--pdf path/to/resume.pdf]
-```
-
-This will create the website file based on your chosen theme and the content in `resume-enhanced.md` (or the processed PDF if provided).
+- `resume.md` - ordered snapshot of your resume
+- `resume-enhanced.md` - your resume 're-designed' by AI, same content
 
 ## Features
 
@@ -65,6 +62,13 @@ This will create the website file based on your chosen theme and the content in 
 - Optional AI-powered layout enhancement for a polished, professional appearance
 
 Simply run the script, and Mono Resume will create a sleek, customized website based on your resume content and chosen theme. It's that easy to make your CV stand out in the digital world!
+
+## Monospace fonts
+
+- https://owickstrom.github.io/the-monospace-web
+- https://monaspace.githubnext.com
+- https://github.com/gabrielelana/awesome-terminal-fonts
+- https://en.wikipedia.org/wiki/List_of_monospaced_typefaces
 
 ## License
 
