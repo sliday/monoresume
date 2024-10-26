@@ -11,3 +11,4 @@ tenacity
 pymdown-extensions
 emoji
 halo
+ell-ai
