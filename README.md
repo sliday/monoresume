@@ -42,6 +42,8 @@ The `generate.py` script creates a customized static website:
 - Resizes and optimizes the extracted photo
 - Implements responsive design for various screen sizes
 - Includes a theme toggle for light/dark mode
+- Randomly selects a Google Font for the resume
+- Provides AI-enhanced resume layout option
 
 Run the script with:
 
@@ -50,6 +52,19 @@ python generate.py [--pdf path/to/resume.pdf]
 ```
 
 This will create the website file based on your chosen theme and the content in `resume-enhanced.md` (or the processed PDF if provided).
+
+## Features
+
+- Choose from a variety of themes, including a fun "Surprise" option for unique, retro-inspired looks
+- Preserve your resume's structure and formatting, ensuring it looks great in digital form
+- Automatically create clickable links for websites and email addresses
+- Optimize your profile photo for web display
+- Enjoy a responsive design that looks good on any device
+- Switch between light and dark modes with a simple toggle
+- Experience a fresh look with randomly selected modern fonts
+- Optional AI-powered layout enhancement for a polished, professional appearance
+
+Simply run the script, and Mono Resume will create a sleek, customized website based on your resume content and chosen theme. It's that easy to make your CV stand out in the digital world!
 
 ## License
 
