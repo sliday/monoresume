@@ -61,6 +61,15 @@ The script creates the website file based on your chosen theme and the content i
 - Experience a fresh look with randomly selected modern fonts
 - Optional AI-powered layout enhancement for a polished, professional appearance
 
+## Project Structure
+
+- `generate.py` - Main script to generate the resume website
+- `templates.html` - Main HTML template for the resume
+- `index.css` - Base CSS styles for the resume
+- `theme_...css` - Pre-built CSS themes for the resume
+- `resume.md` - your resume in clean .md format.
+- `resume-enhanced.md` - your resume 're-designed' by AI, same content
+
 Simply run the script, and Mono Resume will create a sleek, customized website based on your resume content and chosen theme. It's that easy to make your CV stand out in the digital world!
 
 ## Monospace fonts

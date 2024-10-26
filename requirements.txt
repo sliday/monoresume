@@ -1,5 +1,5 @@
 colorama
-fitz
+PyMuPDF
 httpx
 Jinja2
 markdown
@@ -9,3 +9,5 @@ PyYAML
 requests
 tenacity
 pymdown-extensions
+emoji
+halo
